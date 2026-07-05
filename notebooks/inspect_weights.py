@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
-model = tf.keras.models.load_model("artifacts/best_model.keras")
+model = tf.keras.models.load_model("../artifacts/best_model.keras")
 
 for layer in model.layers:
     if "dense" in layer.name.lower():

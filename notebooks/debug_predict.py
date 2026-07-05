@@ -2,11 +2,11 @@ import joblib, json
 import pandas as pd
 import tensorflow as tf
 
-model = tf.keras.models.load_model("artifacts/best_model.keras")
-scaler = joblib.load("artifacts/scaler.pkl")
-feature_columns = joblib.load("artifacts/feature_columns.pkl")
-numeric_cols = joblib.load("artifacts/numeric_cols.pkl")
-with open("artifacts/model_info.json") as f:
+model = tf.keras.models.load_model("../artifacts/best_model.keras")
+scaler = joblib.load("../artifacts/scaler.pkl")
+feature_columns = joblib.load("../artifacts/feature_columns.pkl")
+numeric_cols = joblib.load("../artifacts/numeric_cols.pkl")
+with open("../artifacts/model_info.json") as f:
     model_info = json.load(f)
 
 BINARY_MAP = {"Yes": 1, "No": 0, "Male": 1, "Female": 0}
