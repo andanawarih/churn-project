@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Churnlytics — Customer Retention Intelligence</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">CHURNLYTICS.</div>
+  <div class="nav-links">
+    <a href="#panduan" class="nav-link">Data</a>
+    <a href="#form" class="nav-link">Input</a>
+  </div>
+  <div class="team-tag">Kelompok 5</div>
+</nav>
+
+<header class="hero">
+  <div class="hero-text">
+    <h1>PREDIKSI<br>CHURN<span class="dot">.</span></h1>
+    <p class="subtitle">Sistem deep learning yang membaca pola perilaku pelanggan
+    dan memperkirakan risiko berhenti berlangganan — dibangun di atas model
+    <strong>{{ model_name }}</strong>.</p>
+    <div class="hero-stats">
+      <div><span>7.043</span><small>Data pelanggan</small></div>
+      <div><span>{{ (metrics[model_name]['f1']*100)|round(1) }}%</span><small>F1-Score</small></div>
+      <div><span>2</span><small>Model DL dibandingkan</small></div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <svg viewBox="0 0 420 420" class="network-svg" xmlns="http://www.w3.org/2000/svg">
+      <g class="link-line">
+        <line x1="95" y1="140" x2="215" y2="70"/>
+        <line x1="215" y1="70" x2="330" y2="130"/>
+        <line x1="95" y1="140" x2="215" y2="210"/>
+        <line x1="215" y1="210" x2="330" y2="130"/>
+        <line x1="215" y1="70" x2="215" y2="210"/>
+        <line x1="95" y1="140" x2="80" y2="270"/>
+        <line x1="215" y1="210" x2="180" y2="320"/>
+        <line x1="215" y1="210" x2="290" y2="300"/>
+        <line x1="330" y1="130" x2="360" y2="250"/>
+        <line x1="180" y1="320" x2="290" y2="300"/>
+        <line x1="80" y1="270" x2="180" y2="320"/>
+        <line x1="290" y1="300" x2="360" y2="250"/>
+      </g>
+      <g class="node-lime">
+        <circle cx="215" cy="210" r="22"/>
+      </g>
+      <g class="node-ink">
+        <circle cx="95" cy="140" r="10"/>
+        <circle cx="215" cy="70" r="8"/>
+        <circle cx="330" cy="130" r="12"/>
+        <circle cx="80" cy="270" r="7"/>
+        <circle cx="180" cy="320" r="9"/>
+        <circle cx="290" cy="300" r="11"/>
+        <circle cx="360" cy="250" r="6"/>
+      </g>
+    </svg>
+  </div>
+</header>
+
+<section class="panel" id="panduan">
+  <div class="panel-head">
+    <h2>Panduan Pengisian</h2>
+    <p>Baca dulu penjelasan singkat tiap kolom di bawah ini sebelum mengisi data pelanggan, biar tidak salah pilih.</p>
+  </div>
+
+  <div class="guide-grid">
+    <div class="guide-item"><span class="guide-num">01</span><div><h4>Gender</h4><p>Pilih jenis kelamin pelanggan sesuai data yang tercatat, Male atau Female.</p></div></div>
+    <div class="guide-item"><span class="guide-num">02</span><div><h4>Senior Citizen</h4><p>Tandai "Ya" jika pelanggan berusia 65 tahun ke atas, atau "Tidak" jika belum.</p></div></div>
+    <div class="guide-item"><span class="guide-num">03</span><div><h4>Partner</h4><p>Pilih "Yes" jika pelanggan memiliki pasangan yang terdaftar dalam satu rumah tangga.</p></div></div>
+    <div class="guide-item"><span class="guide-num">04</span><div><h4>Dependents</h4><p>Pilih "Yes" jika pelanggan menanggung anak atau anggota keluarga lain sebagai tanggungan.</p></div></div>
+    <div class="guide-item"><span class="guide-num">05</span><div><h4>Tenure (bulan)</h4><p>Isi jumlah bulan pelanggan sudah berlangganan sejak pertama kali mendaftar.</p></div></div>
+    <div class="guide-item"><span class="guide-num">06</span><div><h4>Phone Service</h4><p>Pilih "Yes" jika pelanggan berlangganan layanan telepon rumah.</p></div></div>
+    <div class="guide-item"><span class="guide-num">07</span><div><h4>Multiple Lines</h4><p>Pilih apakah pelanggan memiliki lebih dari satu saluran telepon yang aktif.</p></div></div>
+    <div class="guide-item"><span class="guide-num">08</span><div><h4>Internet Service</h4><p>Pilih jenis layanan internet: DSL, Fiber optic, atau No jika tidak berlangganan internet.</p></div></div>
+    <div class="guide-item"><span class="guide-num">09</span><div><h4>Online Security</h4><p>Pilih "Yes" jika pelanggan menambahkan layanan keamanan online pada paket internetnya.</p></div></div>
+    <div class="guide-item"><span class="guide-num">10</span><div><h4>Online Backup</h4><p>Pilih "Yes" jika pelanggan menggunakan layanan pencadangan data secara online.</p></div></div>
+    <div class="guide-item"><span class="guide-num">11</span><div><h4>Device Protection</h4><p>Pilih "Yes" jika pelanggan memiliki perlindungan/garansi tambahan untuk perangkatnya.</p></div></div>
+    <div class="guide-item"><span class="guide-num">12</span><div><h4>Tech Support</h4><p>Pilih "Yes" jika pelanggan berlangganan layanan dukungan teknis tambahan.</p></div></div>
+    <div class="guide-item"><span class="guide-num">13</span><div><h4>Streaming TV</h4><p>Pilih "Yes" jika pelanggan menggunakan layanan streaming TV melalui internet perusahaan.</p></div></div>
+    <div class="guide-item"><span class="guide-num">14</span><div><h4>Streaming Movies</h4><p>Pilih "Yes" jika pelanggan menggunakan layanan streaming film melalui internet perusahaan.</p></div></div>
+    <div class="guide-item"><span class="guide-num">15</span><div><h4>Contract</h4><p>Pilih jenis kontrak: bulanan (Month-to-month), satu tahun, atau dua tahun.</p></div></div>
+    <div class="guide-item"><span class="guide-num">16</span><div><h4>Paperless Billing</h4><p>Pilih "Yes" jika pelanggan menerima tagihan secara digital, bukan cetak/fisik.</p></div></div>
+    <div class="guide-item"><span class="guide-num">17</span><div><h4>Payment Method</h4><p>Pilih metode pembayaran yang biasa digunakan pelanggan setiap bulannya.</p></div></div>
+    <div class="guide-item"><span class="guide-num">18</span><div><h4>Monthly Charges</h4><p>Isi nominal tagihan bulanan pelanggan dalam satuan dolar.</p></div></div>
+    <div class="guide-item"><span class="guide-num">19</span><div><h4>Total Charges</h4><p>Isi akumulasi total tagihan yang sudah dibayarkan sejak awal berlangganan.</p></div></div>
+  </div>
+</section>
+
+<section class="panel" id="form">
+  <div class="panel-head">
+    <h2>Input Data Pelanggan</h2>
+    <p>Lengkapi profil pelanggan untuk melihat estimasi risiko churn secara langsung.</p>
+  </div>
+
+  <form id="churn-form" class="form-grid">
+    <div class="field">
+      <label>Gender</label>
+      <select name="gender"><option>Male</option><option>Female</option></select>
+    </div>
+    <div class="field">
+      <label>Senior Citizen</label>
+      <select name="SeniorCitizen"><option value="0">Tidak</option><option value="1">Ya</option></select>
+    </div>
+    <div class="field">
+      <label>Partner</label>
+      <select name="Partner"><option>Yes</option><option>No</option></select>
+    </div>
+    <div class="field">
+      <label>Dependents</label>
+      <select name="Dependents"><option>Yes</option><option>No</option></select>
+    </div>
+    <div class="field">
+      <label>Tenure (bulan)</label>
+      <input type="number" name="tenure" value="12" min="0">
+    </div>
+    <div class="field">
+      <label>Phone Service</label>
+      <select name="PhoneService"><option>Yes</option><option>No</option></select>
+    </div>
+    <div class="field">
+      <label>Multiple Lines</label>
+      <select name="MultipleLines"><option>No</option><option>Yes</option><option>No phone service</option></select>
+    </div>
+    <div class="field">
+      <label>Internet Service</label>
+      <select name="InternetService"><option>DSL</option><option>Fiber optic</option><option>No</option></select>
+    </div>
+    <div class="field">
+      <label>Online Security</label>
+      <select name="OnlineSecurity"><option>No</option><option>Yes</option><option>No internet service</option></select>
+    </div>
+    <div class="field">
+      <label>Online Backup</label>
+      <select name="OnlineBackup"><option>No</option><option>Yes</option><option>No internet service</option></select>
+    </div>
+    <div class="field">
+      <label>Device Protection</label>
+      <select name="DeviceProtection"><option>No</option><option>Yes</option><option>No internet service</option></select>
+    </div>
+    <div class="field">
+      <label>Tech Support</label>
+      <select name="TechSupport"><option>No</option><option>Yes</option><option>No internet service</option></select>
+    </div>
+    <div class="field">
+      <label>Streaming TV</label>
+      <select name="StreamingTV"><option>No</option><option>Yes</option><option>No internet service</option></select>
+    </div>
+    <div class="field">
+      <label>Streaming Movies</label>
+      <select name="StreamingMovies"><option>No</option><option>Yes</option><option>No internet service</option></select>
+    </div>
+    <div class="field">
+      <label>Contract</label>
+      <select name="Contract"><option>Month-to-month</option><option>One year</option><option>Two year</option></select>
+    </div>
+    <div class="field">
+      <label>Paperless Billing</label>
+      <select name="PaperlessBilling"><option>Yes</option><option>No</option></select>
+    </div>
+
+    <div class="field-group-center">
+      <div class="field">
+        <label>Payment Method</label>
+        <select name="PaymentMethod">
+          <option>Electronic check</option><option>Mailed check</option>
+          <option>Bank transfer (automatic)</option><option>Credit card (automatic)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Monthly Charges</label>
+        <input type="number" step="0.01" name="MonthlyCharges" value="70.00">
+      </div>
+      <div class="field">
+        <label>Total Charges</label>
+        <input type="number" step="0.01" name="TotalCharges" value="840.00">
+      </div>
+    </div>
+
+    <button type="submit" class="btn-predict">Prediksi Risiko Churn</button>
+  </form>
+</section>
+
+<section class="panel result-panel" id="result-panel" style="display:none;">
+  <div class="panel-head">
+    <h2>Hasil Analisis</h2>
+  </div>
+  <div class="result-body">
+    <svg id="gauge" viewBox="0 0 240 140" width="320">
+      <path d="M20,130 A100,100 0 0,1 220,130" fill="none" stroke="#e6e4da" stroke-width="18"/>
+      <path id="gauge-fill" d="M20,130 A100,100 0 0,1 220,130" fill="none" stroke="#c7e02a" stroke-width="18" stroke-dasharray="0 315"/>
+      <line id="needle" x1="120" y1="130" x2="120" y2="45" stroke="#141414" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="120" cy="130" r="8" fill="#141414"/>
+    </svg>
+    <div class="result-text">
+      <p class="risk-label" id="risk-label">—</p>
+      <p class="risk-value" id="risk-value">0%</p>
+      <p class="risk-desc">Estimasi probabilitas pelanggan ini berhenti berlangganan, dihasilkan oleh model <strong>{{ model_name }}</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Model terbaik: <strong>{{ model_name }}</strong> — Accuracy {{ (metrics[model_name]['accuracy']*100)|round(1) }}%,
+  Precision {{ (metrics[model_name]['precision']*100)|round(1) }}%,
+  Recall {{ (metrics[model_name]['recall']*100)|round(1) }}%,
+  F1 {{ (metrics[model_name]['f1']*100)|round(1) }}%</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
